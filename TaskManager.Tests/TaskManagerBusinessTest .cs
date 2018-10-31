@@ -26,17 +26,13 @@ namespace TaskManager.Tests
         public void Setup()
         {
             taskRepository = new TaskRepository();
+            randomTasks = new List<TaskData>();
             randomTasks = SetupTasks();
         }
 
         public List<TaskData> SetupTasks()
         {
-            int counter = new int();
             List<TaskData> tasks = taskRepository.GetAllTasks().ToList();
-
-            foreach (TaskData task in tasks)
-                task.TaskId = ++counter;
-
             return tasks;
         }
         #endregion
@@ -45,20 +41,20 @@ namespace TaskManager.Tests
         [Test]
         public void TestAddTask()
         {
+            int maxTaskIDBeforeAdd = randomTasks.Max(a => a.TaskId);
             TaskData newTask = new TaskData()
             {
-                TaskId = 0,
                 TaskName = "Testing1", 
                 ParentTaskId = 5,
                 Priority = 10,
                 StartDate = DateTime.ParseExact("8/25/2018", "M/d/yyyy", CultureInfo.InvariantCulture),
                 EndDate = DateTime.ParseExact("9/26/2018", "M/d/yyyy", CultureInfo.InvariantCulture)
             };
-
-            int maxTaskIDBeforeAdd = randomTasks.Max(a => a.TaskId);
+           
             taskRepository.AddTask(newTask);
             randomTasks = SetupTasks();
-            Assert.That(newTask, Is.EqualTo(randomTasks.Last()));
+            TaskData dbTask = new TaskData();
+            dbTask = randomTasks.Last();
             Assert.That(maxTaskIDBeforeAdd + 1, Is.EqualTo(randomTasks.Last().TaskId));
 
         }
@@ -110,7 +106,7 @@ namespace TaskManager.Tests
             TaskData firstTask = randomTasks.First();
             TaskData getTask = taskRepository.GetTaskById(firstTask.TaskId);
             Assert.IsNotNull(getTask);
-            Assert.AreEqual(firstTask, getTask);
+            Assert.AreEqual(firstTask.TaskId, getTask.TaskId);
 
         }
         #endregion

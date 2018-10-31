@@ -21,9 +21,9 @@ namespace TaskManager.API.Controllers
 
 
         // GET: api/Task
-        public IQueryable<TaskData> GetTasks()
+        public List<TaskData> GetTasks()
         {
-            IQueryable<TaskData> taskDetail = null;  
+            List<TaskData> taskDetail = null;  
             try
             {
                 taskDetail = objTaskRepo.GetAllTasks();

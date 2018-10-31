@@ -12,7 +12,7 @@ namespace TaskManager.BusinessLayer
         void AddTask(TaskData objTask);
         void EditTask(TaskData objTask);
         void RemoveTask(int Id);
-        IQueryable<TaskData> GetAllTasks();
+        List<TaskData> GetAllTasks();
         TaskData GetTaskById(int Id);
     }
 }

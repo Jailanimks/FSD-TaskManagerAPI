@@ -7,12 +7,17 @@ namespace TaskManager.DataLayer
 
     public partial class DatabaseContext : DbContext
     {
-        public DatabaseContext(): base("SqlConnection")
+        public DatabaseContext(): base("name=SqlConnection")
         {
         }
         public DbSet<TaskData> Tasks { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<TaskData>().HasKey(p => p.TaskId);
+            modelBuilder.Entity<TaskData>().Property(c => c.TaskId)
+                   .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            base.OnModelCreating(modelBuilder);
+
         }
     }
 }

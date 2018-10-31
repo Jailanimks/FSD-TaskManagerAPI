@@ -10,48 +10,67 @@ namespace TaskManager.BusinessLayer
 {
     public class TaskRepository : ITaskRepository
     {
-        DatabaseContext taskContext = new DatabaseContext();
-        private TaskData objdata = new TaskData();
-
+       
+    
         public void AddTask(TaskData objTask)
         {
-            taskContext.Entry(objTask).State = System.Data.Entity.EntityState.Detached;
-            taskContext.Tasks.Add(objTask);
-            taskContext.SaveChanges();
+            using (var taskContext = new DatabaseContext())
+            { 
+                 taskContext.Entry(objTask).State = System.Data.Entity.EntityState.Added;
+                taskContext.Tasks.Add(objTask);
+                taskContext.SaveChanges();
+            }
         }
 
         public void EditTask(TaskData objTask)
         {
-
-            var objdata = taskContext.Tasks.Find(objTask.TaskId);
-            if (objdata != null)
+            TaskData objdata = new TaskData();
+            using (var taskContext = new DatabaseContext())
             {
-                objdata.TaskName = objTask.TaskName;
-                objdata.ParentTaskId = objTask.ParentTaskId;
-                objdata.StartDate = objTask.StartDate;
-                objdata.EndDate = objTask.EndDate;
-                objdata.Priority = objTask.Priority;
-                objdata.IsTaskEnded = objTask.IsTaskEnded;
+                 objdata = taskContext.Tasks.Find(objTask.TaskId);
+                if (objdata != null)
+                {
+                    objdata.TaskName = objTask.TaskName;
+                    objdata.ParentTaskId = objTask.ParentTaskId;
+                    objdata.StartDate = objTask.StartDate;
+                    objdata.EndDate = objTask.EndDate;
+                    objdata.Priority = objTask.Priority;
+                    objdata.IsTaskEnded = objTask.IsTaskEnded;
+                }
+                taskContext.Entry(objdata).CurrentValues.SetValues(objTask);
+                taskContext.SaveChanges();
             }
-            taskContext.Entry(objdata).CurrentValues.SetValues(objTask); 
-            taskContext.SaveChanges();
         }
 
-        public IQueryable<TaskData> GetAllTasks()
+        public List<TaskData> GetAllTasks()
         {
-            return taskContext.Tasks;
+            List<TaskData> tData= null;
+            using (var taskContext = new DatabaseContext())
+            {
+                tData= taskContext.Tasks.ToList();
+            }
+            return tData;
         }
                 
         public TaskData GetTaskById(int Id)
         {
-            objdata = (from obTask in taskContext.Tasks where obTask.TaskId == Id select obTask).FirstOrDefault();
+            TaskData objdata = new TaskData();
+            objdata = null;
+            using (var taskContext = new DatabaseContext())
+            {
+                objdata = (from obTask in taskContext.Tasks where obTask.TaskId == Id select obTask).FirstOrDefault();
+                
+            }
             return objdata;
         }
 
         public void RemoveTask(int Id)
         {
-            taskContext.Tasks.Remove(taskContext.Tasks.Find(Id));
-            taskContext.SaveChanges();      
+            using (var taskContext = new DatabaseContext())
+            {
+                taskContext.Tasks.Remove(taskContext.Tasks.Find(Id));
+                taskContext.SaveChanges();
+            }
         }
                
     }
