@@ -13,7 +13,6 @@ namespace TaskManager.DataLayer
     public class TaskData
     {
         [Key]
-        [Column("Task_ID")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TaskId { get; set; }
 
