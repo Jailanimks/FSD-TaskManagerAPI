@@ -53,8 +53,6 @@ namespace TaskManager.Tests
            
             taskRepository.AddTask(newTask);
             randomTasks = SetupTasks();
-            TaskData dbTask = new TaskData();
-            dbTask = randomTasks.Last();
             Assert.That(maxTaskIDBeforeAdd + 1, Is.EqualTo(randomTasks.Last().TaskId));
 
         }
