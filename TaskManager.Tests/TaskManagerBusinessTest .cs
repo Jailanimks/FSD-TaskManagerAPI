@@ -47,6 +47,7 @@ namespace TaskManager.Tests
         {
             TaskData newTask = new TaskData()
             {
+                TaskId = 0,
                 TaskName = "Testing1", 
                 ParentTaskId = 5,
                 Priority = 10,
