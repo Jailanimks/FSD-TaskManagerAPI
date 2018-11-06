@@ -240,3 +240,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/TaskManagerLoadTest - Copy.bat
+/TaskManagerLoadTest.bat
+/Angular-Git-Update.txt
